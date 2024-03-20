@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    discovery:
+      enabled: true
+  application:
+    name: user-service
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/todolist_db
+    username: todolist
+    password: todolist

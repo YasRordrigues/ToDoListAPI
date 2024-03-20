@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  todolist_database:
+    container_name: todolist-database
+    restart: unless-stopped
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: todolist
+      POSTGRES_PASSWORD: todolist
+      POSTGRES_DB: todolist_db
+    networks:
+      - todolist-network
+
+networks:
+  todolist-network:
+    name: todolist-network

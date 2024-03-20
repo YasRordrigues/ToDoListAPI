@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateTaskDTO {
+public class TaskDTO {
     private String title;
     private String description;
     private LocalDateTime expirationDate;
