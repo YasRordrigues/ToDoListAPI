@@ -3,6 +3,7 @@ package com.example.todolist.controllers;
 import com.example.todolist.dtos.TaskDTO;
 import com.example.todolist.entities.Task;
 import com.example.todolist.services.interfaces.ITaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,18 @@ public class TaskController {
     private final ITaskService taskService;
 
     @PostMapping
-    public Mono<ResponseEntity<Task>> createTask(@RequestBody TaskDTO taskDTO) {
+    public Mono<ResponseEntity<Task>> createTask(@Valid @RequestBody TaskDTO taskDTO) {
         return taskService.createTask(taskDTO)
-                .map(savedTask -> new ResponseEntity<>(savedTask, HttpStatus.CREATED));
+                .map(task -> ResponseEntity.status(HttpStatus.CREATED).body(task));
     }
 
     @GetMapping
-    public Flux<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    public Mono<ResponseEntity<Flux<Task>>> getAllTasks() {
+        Flux<Task> tasks = taskService.getAllTasks();
+        return tasks.collectList()
+                .flatMap(list -> list.isEmpty()
+                        ? Mono.just(ResponseEntity.noContent().build())
+                        : Mono.just(ResponseEntity.ok(tasks)));
     }
 
     @GetMapping("/{id}")
@@ -38,16 +43,14 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<Task>> updateTask(@PathVariable UUID id, @RequestBody TaskDTO taskDTO) {
+    public Mono<ResponseEntity<Task>> updateTask(@PathVariable UUID id, @Valid @RequestBody TaskDTO taskDTO) {
         return taskService.updateTask(id, taskDTO)
-                .map(updatedTask -> new ResponseEntity<>(updatedTask, HttpStatus.OK))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok);
     }
 
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteTask(@PathVariable UUID id) {
         return taskService.deleteTask(id)
-                .then(Mono.just(new ResponseEntity<Void>(HttpStatus.OK)))
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .then(Mono.just(new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 }
