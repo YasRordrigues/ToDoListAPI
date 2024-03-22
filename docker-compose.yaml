@@ -1,19 +1,39 @@
 version: "3.8"
 
 services:
-  todolist_database:
-    container_name: todolist-database
-    restart: unless-stopped
-    image: postgres:alpine
+  todolist-application:
+    build: .
     ports:
-      - "5432:5432"
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: user-service
+      SPRING_CLOUD_DISCOVERY_ENABLED: true
+      SPRING_R2DBC_URL: r2dbc:postgresql://todolist-database:5432/todolist_db
+      SPRING_R2DBC_USERNAME: todolist
+      SPRING_R2DBC_PASSWORD: todolist
+    depends_on:
+      - todolist-database
+    networks:
+      - todolist-network
+
+  todolist-database:
+    container_name: todolist-database
+    image: postgres:alpine
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_USER: todolist
       POSTGRES_PASSWORD: todolist
       POSTGRES_DB: todolist_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - todolist-network
 
 networks:
   todolist-network:
     name: todolist-network
+
+volumes:
+  postgres_data:

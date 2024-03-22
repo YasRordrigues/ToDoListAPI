@@ -11,3 +11,16 @@ spring:
     url: r2dbc:postgresql://localhost:5432/todolist_db
     username: todolist
     password: todolist
+
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+    path: /swagger-doc/v3/api-docs
+  swagger-ui:
+    path: /swagger-doc/swagger-ui.html
+
+logging:
+  level:
+    org:
+      springframework: INFO
