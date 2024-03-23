@@ -67,11 +67,14 @@ public class TaskService implements ITaskService {
     public Mono<Task> getTaskById(UUID id) {
         log.info("Looking for task with id '{}'.", id);
         return taskRepository.findById(id)
-                .doOnSuccess(task -> log.info("Task with id '{}' found.", task.getId()))
-                .switchIfEmpty(Mono.defer(() -> {
-                    log.warn("Task with id '{}' not found.", id);
-                    return Mono.error(new TaskNotFoundException("Task not found with id: " + id));
-                }));
+                .doOnSuccess(task -> {
+                    if (task != null) {
+                        log.info("Task with id '{}' found: {}", id, task);
+                    } else {
+                        log.warn("Task with id '{}' not found.", id);
+                    }
+                })
+                .switchIfEmpty(Mono.error(new TaskNotFoundException("Task not found with id: " + id)));
     }
 
     @Override

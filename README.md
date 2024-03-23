@@ -1,62 +1,83 @@
-# ToDo List API
+# API de Lista de Tarefas (ToDo List)
 
-## Overview
+## Visão Geral
 
-This project is a reactive web application for managing a to-do list. It utilizes Spring Boot with R2DBC for reactive database access and Spring WebFlux for handling asynchronous stream-based data. The API allows for creating, retrieving, updating, and deleting tasks, with an emphasis on non-blocking and reactive operations.
+Este projeto é uma aplicação web reativa para gestão de uma lista de tarefas. Utiliza o Spring Boot com R2DBC para acesso reativo ao banco de dados e o Spring WebFlux para manipular dados de forma assíncrona e não bloqueante. A API permite criar, recuperar, atualizar e excluir tarefas, com ênfase em operações reativas e não bloqueantes.
 
-## API Documentation
+## Documentação da API
 
-The API documentation is automatically generated using Springdoc OpenAPI. The interactive API documentation, provided by Swagger UI, can be accessed at `http://localhost:8080/swagger-doc/swagger-ui.html` when the server is running.
+A documentação da API é gerada automaticamente usando o Springdoc OpenAPI. A documentação interativa da API, fornecida pela Swagger UI, pode ser acessada em `http://localhost:8080/swagger-doc/swagger-ui.html` quando o servidor está em execução.
 
-![Swagger UI Screenshot](assets/swagger.png)
+![Captura de Tela do Swagger UI](assets/swagger.png)
 
-In addition to the Swagger UI, an Insomnia collection is also provided for convenience:
+Além da Swagger UI, uma coleção do Insomnia também é fornecida para facilitar os testes:
 
-![Insomnia REST Client Screenshot](assets/insomnia.png)
+![Captura de Tela do Cliente REST Insomnia](assets/insomnia.png)
 
-## Technology Stack
+## Pilha de Tecnologia
 
-- **Spring Boot**: Framework for creating stand-alone, production-grade Spring-based applications.
-- **R2DBC**: Reactive Relational Database Connectivity for scalable and event-driven database access.
-- **Spring WebFlux**: Reactive-stack web framework, allowing for asynchronous and non-blocking event-driven web applications.
-- **PostgreSQL**: Open-source relational database.
-- **Docker**: Platform for developing, shipping, and running applications inside isolated containers.
+- **Spring Boot**: Framework para criação de aplicações Spring independentes e de nível de produção.
+- **R2DBC**: Conectividade de Banco de Dados Relacional Reativo para acesso escalável e orientado a eventos ao banco de dados.
+- **Spring WebFlux**: Framework web para pilha reativa, permitindo aplicações web assíncronas e não bloqueantes.
+- **PostgreSQL**: Banco de dados relacional de código aberto.
+- **Docker**: Plataforma para desenvolver, enviar e executar aplicações em contêineres isolados.
 
-## Running the Application
+## Executando a Aplicação
 
-There are two Docker Compose configurations provided with this project:
+Duas configurações do Docker Compose são fornecidas com este projeto:
 
-1. **Production**: The standard Docker Compose configuration.
-   - To run the application using this configuration, execute the following command:
-     ```sh
-     docker-compose up
-     ```
+1. **Produção**: Configuração padrão do Docker Compose.
+    - Para executar a aplicação usando esta configuração, execute o comando:
+      ```sh
+      docker-compose up
+      ```
 
-2. **Development**: A Docker Compose configuration tailored for development purposes.
-   - To run the application using the development configuration, use the following command:
-     ```sh
-     docker-compose -f docker-compose-dev.yaml up --build
-     ```
+2. **Desenvolvimento**: Configuração do Docker Compose adaptada para fins de desenvolvimento.
+    - Para executar a aplicação usando a configuração de desenvolvimento, utilize o comando:
+      ```sh
+      docker-compose -f docker-compose-dev.yaml up --build
+      ```
 
-The development Docker Compose file builds the image from scratch, ensuring that any local changes to the codebase are included in the containerized environment.
+O arquivo Docker Compose de desenvolvimento constrói a imagem do zero, garantindo que quaisquer alterações locais no código-fonte sejam incluídas no ambiente conteinerizado.
 
-## Configuration Details
+## Detalhes da Configuração
 
-The application is configured to run on port `8080`. The R2DBC URL, username, and password are set for PostgreSQL database access. These values are specified in the `application.yaml` file for Spring's configuration and overridden by the environment variables in the Docker Compose files when running in a containerized environment.
+A aplicação está configurada para rodar na porta `8080`. A URL do R2DBC, nome de usuário e senha são definidos para acesso ao banco de dados PostgreSQL. Esses valores são especificados no arquivo `application.yaml` para a configuração do Spring e substituídos pelas variáveis de ambiente nos arquivos Docker Compose quando executados em um ambiente conteinerizado.
 
-The `docker-compose.yaml` sets up two main services:
+O `docker-compose.yaml` configura dois serviços principais:
 
-- `todolist-application`: The core application service.
-- `todolist-database`: A PostgreSQL database service.
+- `todolist-application`: O serviço principal da aplicação.
+- `todolist-database`: Um serviço de banco de dados PostgreSQL.
 
 ## Volumes
 
-The PostgreSQL database data is persisted using a Docker volume named `postgres_data`. This ensures that the database state is maintained across container restarts.
+Os dados do banco de dados PostgreSQL são persistidos usando um volume Docker chamado `postgres_data`. Isso garante que o estado do banco de dados seja mantido entre reinícios dos contêineres.
 
-## Logging
+## Log
 
-Logging is configured to output at the INFO level for Spring Framework classes. This setting can be adjusted as necessary in the `application.yaml` file.
+O log está configurado para saída no nível INFO para as classes do Spring Framework. Essa configuração pode ser ajustada conforme necessário no arquivo `application.yaml`.
 
-## Further Information
+## Executando os Testes
 
-For more details on the implementation, refer to the auto-generated API documentation when the application is running, or explore the codebase for in-depth understanding of the underlying services and controllers.
+Para garantir a qualidade e funcionalidade da API de Lista de Tarefas, uma suíte abrangente de testes foi incluída. Estes testes cobrem uma ampla gama de cenários, desde testes unitários que validam componentes individuais até testes de integração que garantem que todo o sistema funcione conforme esperado.
+
+### Executar os Testes
+
+Para rodar os testes, você pode usar o seguinte comando, caso esteja utilizando o Maven:
+
+```sh
+./mvnw test
+```
+
+Para limpar e instalar as dependências, ignorando os testes:
+
+```sh
+`./mvnw clean install -DskipTests`
+```
+
+### Cobertura de Testes
+
+Os testes foram projetados para cobrir casos de sucesso e falha, garantindo que:
+
+*   As tarefas sejam criadas corretamente com dados de entrada válidos.
+*   O tratamento de erros esteja em vigor para tarefas com datas de expira
